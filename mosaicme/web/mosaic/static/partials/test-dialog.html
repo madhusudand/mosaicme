@@ -1,0 +1,12 @@
+<div class="container">
+
+    <div class="jumbotron top-buffer">
+        <img id="mosaic-img" ng-src="{{ image.url_small }}" data-zoom-image="{{ image.url_large }}" image-on-load>
+
+        <h3>
+            Mosaic sent by <a href="http://twitter.com/{{ image.username }}">{{ image.username }}</a>
+            <span am-time-ago="createdAt"></span>
+        </h3>
+    </div>
+
+</div>

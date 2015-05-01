@@ -53,7 +53,7 @@ mosaicmeApp
                 return viewLocation === $location.path();
         };
     }])
-    .controller('MainCtrl', ['$scope', '$http', '$log', function ($scope, $http, $log, ngDialog) {
+    .controller('MainCtrl', ['$scope', '$http', '$log', 'ngDialog', function ($scope, $http, $log, ngDialog) {
 
         $scope.carouselInterval = 3000;
 
@@ -80,6 +80,15 @@ mosaicmeApp
             error(function (data, status, headers, config) {
                 alert('Error getting images!');
             });
+
+        $scope.openMosaic = function (image) {
+            ngDialog.open({
+                template: '/static/partials/test-dialog.html',
+                controller: ['$scope', function($scope) {
+                    $scope.image = image;
+                }]
+            });
+        };
 
     }])
     .controller('MosaicDetailsCtrl', ['$scope', '$http', '$routeParams',
