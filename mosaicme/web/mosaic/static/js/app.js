@@ -1,4 +1,4 @@
-var mosaicmeApp = angular.module('mosaicmeApp', ['ui.bootstrap', 'ngRoute', 'angularMoment', 'cgBusy', 'ngDialog']).config(function ($httpProvider) {
+var mosaicmeApp = angular.module('mosaicmeApp', ['ui.bootstrap', 'ngRoute', 'angularMoment', 'cgBusy']).config(function ($httpProvider) {
 
     $httpProvider.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
@@ -53,7 +53,7 @@ mosaicmeApp
                 return viewLocation === $location.path();
         };
     }])
-    .controller('MainCtrl', ['$scope', '$http', '$log', 'ngDialog', function ($scope, $http, $log, ngDialog) {
+    .controller('MainCtrl', ['$scope', '$http', '$log', '$modal', function ($scope, $http, $log, $modal) {
 
         $scope.carouselInterval = 3000;
 
@@ -81,35 +81,42 @@ mosaicmeApp
                 alert('Error getting images!');
             });
 
+
         $scope.openMosaic = function (image) {
-            ngDialog.open({
-                template: '/static/partials/test-dialog.html',
-                controller: ['$scope', function($scope) {
-                    $scope.image = image;
-                }]
+
+            var modalInstance = $modal.open({
+              templateUrl: '/static/partials/test-dialog.html',
+              controller: 'MosaicDetailsCtrl',
+              size: 'lg',
+              resolve: {
+                mosaic: function () {
+                   $log.info(image);
+                   return image;
+                },
+                  testit: function() {return 'asd';}
+              }
+            });
+
+            modalInstance.result.then(function () {
+            }, function () {
+              $log.info('Modal dismissed at: ' + new Date());
             });
         };
 
     }])
-    .controller('MosaicDetailsCtrl', ['$scope', '$http', '$routeParams',
-        function ($scope, $http, $routeParams) {
+    .controller('MosaicDetailsCtrl',
+        function ($scope, $http, $log, $modalInstance, mosaic, testit) {
 
-            $scope.loadPromise = $http.get('/mosaic/' + $routeParams.mosaicId).
-                success(function (data, status, headers, config) {
-                    $scope.urlSmall = data['url_small'];
-                    $scope.urlLarge = data['url_large'];
-                    $scope.username = data['username'];
-                    $scope.createdAt = data['date'];
+            $log.info("Mosaic: " + mosaic);
+            $log.info("Mosaic: " + testit);
+            $scope.mosaic = mosaic;
 
-                    $scope.loaded = true;
-                }).
-                error(function (data, status, headers, config) {
-                    alert('Error getting the mosaic!');
-                });
-
-
-            $scope.$on("$destroy", function() {
+            $scope.closeModal = function () {
                 $('#mosaic-img').remove();
-            });
+                $modalInstance.close();
+              };
 
-        }]);
+
+
+
+        });
