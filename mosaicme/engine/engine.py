@@ -30,7 +30,7 @@ def copySourceFile(imagename):
 
 def buildTiles():
     print "build Tiles ...."
-    os.system("metapixel-prepare /mosaic/raw tiles/ --width=32 --height=32")
+    os.system("metapixel-prepare /engine/tmp /engine/tiles/ --width=32 --height=32")
     print " [x] Finished building tiles"
     logging.info('[engine] [x] Finished building tiles')
 
