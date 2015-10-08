@@ -176,7 +176,7 @@ def main():
 
     logger.info('Listening to hashtags {}'.format(hashtags))
 
-    stream = Stream(auth, l)
+    stream = Stream(auth, l, verify=False)
     stream.filter(track=hashtags)
 
 
